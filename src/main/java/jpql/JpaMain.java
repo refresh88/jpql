@@ -25,38 +25,66 @@ public class JpaMain {
 
             Member member1 = new Member();
             member1.setUsername("회원1");
+            member1.setAge(0);
             member1.setTeam(teamA);
             em.persist(member1);
 
             Member member2 = new Member();
             member2.setUsername("회원2");
+            member2.setAge(0);
             member2.setTeam(teamA);
             em.persist(member2);
 
             Member member3 = new Member();
             member3.setUsername("회원3");
+            member3.setAge(0);
             member3.setTeam(teamB);
             em.persist(member3);
 
 
-            em.flush();
+            //벌크연산
+            //FLUSH 자동 호출 flush는 커밋, query나가거나, 강제 호출 될때 호출됨.
+            int resultCount = em.createQuery("update Member m set m.age = 20")
+                    .executeUpdate();
             em.clear();
 
-            String query = "select t from Team t";
+            Member findMember = em.find(Member.class, member1.getId());
+            System.out.println("findMember = " + findMember.getAge());
 
-            List<Team> result = em.createQuery(query, Team.class)
-                    .setFirstResult(0)
-                    .setMaxResults(2)
-                    .getResultList();
+//            // Named Query
+//            List<Member> resultList = em.createNamedQuery("Member.findByUsername", Member.class)
+//                    .setParameter("username", "회원1")
+//                    .getResultList();
+//
+//            for (Member member : resultList) {
+//                System.out.println("member = " + member);
+//            }
 
-            System.out.println("result = " + result.size());
 
-            for (Team team : result) {
-                System.out.println("team = " + team.getName() + "|members =" + team.getMembers());
-                for (Member member : team.getMembers()) {
-                    System.out.println("-> member = " + member);
-                }
-            }
+//            String query = "select m from Member m where m = :member";
+//            Member result = em.createQuery(query, Member.class)
+//                    .setParameter("member", member1)
+//                    .getSingleResult();
+//
+//            System.out.println("result = " + result);
+
+
+
+//            String query = "select t from Team t";
+
+//            List<Team> result = em.createQuery(query, Team.class)
+//                    .setFirstResult(0)
+//                    .setMaxResults(2)
+//                    .getResultList();
+//
+//            System.out.println("result = " + result.size());
+//
+//            for (Team team : result) {
+//                System.out.println("team = " + team.getName() + "|members =" + team.getMembers());
+//                for (Member member : team.getMembers()) {
+//                    System.out.println("-> member = " + member);
+//                }
+//            }
 
 //            String query = "select m from Member m";
 //
